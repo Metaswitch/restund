@@ -192,6 +192,7 @@ static int module_init(void)
 	static struct restund_db db = {
 		.allh  = accounts_getall,
 		.cnth  = accounts_count,
+                .gha1h = NULL,
 		.tlogh = NULL,
 	};
 

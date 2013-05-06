@@ -18,7 +18,7 @@ VERSION   := $(VER_MAJOR).$(VER_MINOR).$(VER_PATCH)
 MODULES	  := binding auth turn stat status
 MODULES	  += $(EXTRA_MODULES)
 
-LIBRE_MK  := $(shell [ -f ../re/mk/re.mk ] && \
+LIBRE_MK  ?= $(shell [ -f ../re/mk/re.mk ] && \
 	echo "../re/mk/re.mk")
 ifeq ($(LIBRE_MK),)
 LIBRE_MK  := $(shell [ -f /usr/share/re/re.mk ] && \
@@ -46,6 +46,14 @@ USE_MYSQL := $(shell [ -f $(SYSROOT)/include/mysql/mysql.h ] || \
 		[ -f $(SYSROOT_ALT)/include/mysql5/mysql/mysql.h ] && echo "1")
 ifneq ($(USE_MYSQL),)
 MODULES += mysql_ser
+endif
+
+# Optional httpdb client module
+USE_HTTPDB := $(shell [ -f $(SYSROOT)/include/curl/curl.h ] || \
+		[ -f $(SYSROOT)/local/include/curl/curl.h ] || \
+		[ -f $(SYSROOT_ALT)/include/curl/curl.h ] && echo "1")
+ifneq ($(USE_HTTPDB),)
+MODULES += httpdb
 endif
 
 

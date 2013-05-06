@@ -225,7 +225,8 @@ static void chan_refresh(struct chan *chan)
 
 static bool chan_numb_valid(uint16_t numb)
 {
-	return CHAN_NUMB_MIN <= numb && numb <= CHAN_NUMB_MAX;
+	return (turndp()->extended_channels ||
+                (CHAN_NUMB_MIN <= numb && numb <= CHAN_NUMB_MAX));
 }
 
 

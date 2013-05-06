@@ -131,6 +131,10 @@
    enqueue relay records.  These records will be written to the database
    as soon as the database becomes available again.
 
+   Certain database modules may choose not to use this local copy mechanism.
+   These must implement their own mechanism to ensure they return promptly
+   to the caller.
+
 2.4.  Log Interface
 
    A generic log interface is implemented in the server core.  All log
@@ -159,7 +163,7 @@
 
 
 3.  Modules
-   
+
    In order to extend the servers feature set in a structured way, the
    Restund server supports dynamic module loading at runtime. Modules
    are loaded through the module option in the configuration file
@@ -208,6 +212,52 @@
 
       Name of the database instance in which user account data are
       stored.
+
+
+
+3.2a.  HTTPDB
+
+   The httpdb module implements the database interface specified in
+   section 2.3 for queries against an HTTP API. Each auth request
+   results in an HTTP request to obtain the digest. No caching is done.
+   The following configuration options are recognized by the httpdb
+   module:
+
+   httpdb_url <url>
+
+      The URL to request, with a single %s standing for the URL-encoded
+      username.  Required.
+
+   httpdb_header <header>
+
+      Name of a custom header to insert in each request. Optional.
+
+   httpdb_header_value <value>
+
+      Value to place in the custom header specified by httpdb_header.
+      Optional.
+
+   httpdb_uri_workaround <yes|no>
+
+      Set to yes to enable the URI workaround. If this is turned on,
+      and a client supplies a username that contains the string %40
+      (suggesting they are incorrectly supplying a URI-encoded value),
+      restund will URI-decode the value and check that the user exists
+      in the database. However, restund cannot use the digest that is
+      returned by the database because it is computed based on the
+      correct username and the client has computed using an incorrect
+      username. Instead, restund computes the digest the client has
+      used from the supplied incorrect username, the configured realm,
+      and a fixed insecure password.
+
+      This option should not be enabled in production, but may be
+      useful as a workaround if you have clients that cannot be
+      correctly configured.
+
+   httpdb_uri_workaround_password <string>
+
+      The fixed insecure password to use for the URI workaround.
+      Optional. Default is "password".
 
 
 3.3.  Stat
@@ -306,6 +356,13 @@
 
       This option specifies the IPv6-address (interface) on which data
       should be relayed.
+
+   turn_extended_channels <yes|no>
+
+      This option allows channel bind requests for any channel number,
+      in violation of RFC5766 (which requires them to be in the range
+      0x4000-0x7FFF).  This is required to support some clients, like
+      Counterpath X-Lite, which violate the spec.
 
 
 4.  References

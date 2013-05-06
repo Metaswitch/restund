@@ -278,7 +278,7 @@ int restund_log_traffic(const char *username, const struct sa *cli,
 	if (!cli || !relay || !peer || !ts)
 		return EINVAL;
 
-	if (!database.run || !database.db || !database.db->tlogh)
+	if (!database.db || !database.db->tlogh)
 		return 0;
 
 	trf = mem_zalloc(sizeof(struct traffic), traffic_destructor);
@@ -318,22 +318,32 @@ int restund_get_ha1(const char *username, uint8_t *ha1)
 	if (!username || !ha1)
 		return EINVAL;
 
-	if (!database.run)
-		return ENOENT;
+        if (!database.db)
+          	return ENOENT;
 
-	pthread_mutex_lock(&database.cred.mutex);
+        if (database.db->gha1h)
+        {
+		err = database.db->gha1h(username, ha1);
+        }
+        else
+        {
+		if (!database.run)
+			return ENOENT;
 
-	acc = list_ledata(hash_lookup(database.cred.ht,
-				      hash_joaat_str(username),
-				      hash_cmp_handler, (void *)username));
-	if (!acc)
-		goto out;
+		pthread_mutex_lock(&database.cred.mutex);
 
-	memcpy(ha1, acc->ha1, MD5_SIZE);
+		acc = list_ledata(hash_lookup(database.cred.ht,
+					      hash_joaat_str(username),
+					      hash_cmp_handler, (void *)username));
+		if (!acc)
+			goto out;
 
-	err = 0;
- out:
-	pthread_mutex_unlock(&database.cred.mutex);
+		memcpy(ha1, acc->ha1, MD5_SIZE);
+
+		err = 0;
+	 out:
+		pthread_mutex_unlock(&database.cred.mutex);
+        }
 
 	return err;
 }
@@ -366,13 +376,16 @@ int restund_db_init(void)
 	if (!database.db)
 		return 0;
 
-	err = pthread_create(&database.thread, NULL, database_thread, NULL);
-	if (err) {
-		restund_warning("database thread error: %m\n", err);
-		return err;
-	}
+        if (!database.db->gha1h)
+        {
+		err = pthread_create(&database.thread, NULL, database_thread, NULL);
+		if (err) {
+			restund_warning("database thread error: %m\n", err);
+			return err;
+		}
 
-	database.run = true;
+		database.run = true;
+        }
 
 	restund_debug("database: realm is '%s', sync interval is %u secs\n",
 		      database.realm, database.cred.syncint);

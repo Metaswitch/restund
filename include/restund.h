@@ -94,6 +94,7 @@ typedef int(restund_db_account_h)(const char *username, const char *ha1,
 typedef int(restund_db_account_all_h)(const char *realm,
 				      restund_db_account_h *acch, void *arg);
 typedef int(restund_db_account_cnt_h)(const char *realm, uint32_t *n);
+typedef int(restund_db_get_ha1_h)(const char *username, uint8_t *ha1);
 typedef int(restund_db_traffic_log_h)(const char *username,
 				      const struct sa *cli,
 				      const struct sa *relay,
@@ -104,8 +105,14 @@ typedef int(restund_db_traffic_log_h)(const char *username,
 
 struct restund_db {
 	struct le le;
+	/* If gha1h is set, all lookups will use it directly.
+         * If gha1h is not set, restund will create a database thread
+         * which periodically syncs an internal cache using allh and
+         * cnth, and requests will go to that cache.
+         */
 	restund_db_account_all_h *allh;
 	restund_db_account_cnt_h *cnth;
+	restund_db_get_ha1_h *gha1h;
 	restund_db_traffic_log_h *tlogh;
 };
 

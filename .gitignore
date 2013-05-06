@@ -1,0 +1,5 @@
+*.so
+*.a
+build-*
+restund
+*~
