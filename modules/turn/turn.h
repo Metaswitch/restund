@@ -2,6 +2,8 @@
  * @file turn.h Internal TURN interface
  *
  * Copyright (C) 2010 Creytiv.com
+ * Copyright (C) 2013 Metaswitch Networks Ltd
+ *  - Support running behind a static NAT
  */
 
 struct turnd {

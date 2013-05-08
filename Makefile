@@ -2,6 +2,8 @@
 # Makefile
 #
 # Copyright (C) 2010 Creytiv.com
+# Copyright (C) 2013 Metaswitch Networks Ltd
+#  - Add support for HTTP-based authentication
 #
 # Input variables:
 #
