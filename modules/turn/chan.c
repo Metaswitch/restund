@@ -2,6 +2,8 @@
  * @file turn.c Turn Server Channel
  *
  * Copyright (C) 2010 Creytiv.com
+ * Copyright (C) 2013 Metaswitch Networks Ltd
+ *  - Support extended channel identifiers for interop
  */
 
 #include <time.h>

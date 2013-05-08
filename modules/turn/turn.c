@@ -2,6 +2,8 @@
  * @file turn.c Turn Server
  *
  * Copyright (C) 2010 Creytiv.com
+ * Copyright (C) 2013 Metaswitch Networks Ltd
+ *  - Support running behind a static NAT
  */
 
 #include <string.h>

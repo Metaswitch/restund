@@ -2,6 +2,8 @@
  * @file restund.h Module Interface
  *
  * Copyright (C) 2010 Creytiv.com
+ * Copyright (C) 2013 Metaswitch Networks Ltd
+ *  - Added support for authentication stores that return HA1
  */
 
 #include <time.h>
