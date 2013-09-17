@@ -64,12 +64,12 @@ static size_t write_data(char* ptr, size_t size, size_t nmemb, void* userdata)
 // Modifies data in-place.
 static char* parse_digest_response(char* data)
 {
-  // Response should look like: {"digest": "6ba737497395177c5abd6297aae181e1"}
-  char* p = strstr(data, "\"digest\":");
+  // Response should look like: {"digest_ha1": "6ba737497395177c5abd6297aae181e1"}
+  char* p = strstr(data, "\"digest_ha1\":");
 
   if (p != NULL)
   {
-    p += strlen("\"digest\":");
+    p += strlen("\"digest_ha1\":");
     p = strstr(p, "\"");
   }
 
