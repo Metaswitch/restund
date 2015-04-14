@@ -34,7 +34,7 @@
 
 MOD		:= httpdb
 $(MOD)_SRCS	+= httpdb.c
-$(MOD)_LFLAGS	+= -lcurl -ljsoncpp
+$(MOD)_LFLAGS	+= -lcurl
 
 CFLAGS		+= -I$(SYSROOT)/local/include
 
